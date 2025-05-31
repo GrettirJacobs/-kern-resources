@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CrewAI GUI</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 d-md-block bg-light sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#" data-bs-toggle="tab" data-bs-target="#dashboard">
+                                <i class="bi bi-speedometer2 me-2"></i>Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#agents">
+                                <i class="bi bi-person me-2"></i>Agents
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#tasks">
+                                <i class="bi bi-list-task me-2"></i>Tasks
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#crews">
+                                <i class="bi bi-people me-2"></i>Crews
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#results">
+                                <i class="bi bi-file-text me-2"></i>Results
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/upload">
+                                <i class="bi bi-upload me-2"></i>Upload Excel
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" data-bs-toggle="tab" data-bs-target="#settings">
+                                <i class="bi bi-gear me-2"></i>Settings
+                            </a>
+                        </li>
+                    </ul>
+
+                    <h6 class="sidebar-heading d-flex justify-content-between align-items-center px-3 mt-4 mb-1 text-muted">
+                        <span>Saved Configurations</span>
+                        <a class="link-secondary" href="#" id="refresh-configs">
+                            <i class="bi bi-arrow-repeat"></i>
+                        </a>
+                    </h6>
+                    <ul class="nav flex-column mb-2" id="saved-configs">
+                        <!-- Saved configurations will be loaded here -->
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Main content -->
+            <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                <div class="tab-content" id="main-content">
+                    <!-- Dashboard -->
+                    <div class="tab-pane fade show active" id="dashboard">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Dashboard</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <div class="btn-group me-2">
+                                    <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh-status">
+                                        <i class="bi bi-arrow-repeat"></i> Refresh
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">System Status</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush" id="system-status">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                CrewAI
+                                                <span class="badge bg-secondary" id="crewai-status">Unknown</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                CrewAI Integration
+                                                <span class="badge bg-secondary" id="integration-status">Unknown</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Environment Manager
+                                                <span class="badge bg-secondary" id="env-manager-status">Unknown</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Available Models</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <ul class="list-group list-group-flush" id="available-models">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                OpenAI
+                                                <span class="badge bg-primary" id="openai-model">Unknown</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Anthropic
+                                                <span class="badge bg-primary" id="anthropic-model">Unknown</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Groq
+                                                <span class="badge bg-primary" id="groq-model">Unknown</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                Google
+                                                <span class="badge bg-primary" id="google-model">Unknown</span>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Quick Start</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="card mb-3">
+                                                    <div class="card-body text-center">
+                                                        <i class="bi bi-person display-4"></i>
+                                                        <h5 class="card-title mt-3">Create Agent</h5>
+                                                        <p class="card-text">Create a new agent with a specific role and goal.</p>
+                                                        <button class="btn btn-primary" data-bs-toggle="tab" data-bs-target="#agents">
+                                                            Create Agent
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card mb-3">
+                                                    <div class="card-body text-center">
+                                                        <i class="bi bi-list-task display-4"></i>
+                                                        <h5 class="card-title mt-3">Create Task</h5>
+                                                        <p class="card-text">Create a new task for an agent to complete.</p>
+                                                        <button class="btn btn-primary" data-bs-toggle="tab" data-bs-target="#tasks">
+                                                            Create Task
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-md-4">
+                                                <div class="card mb-3">
+                                                    <div class="card-body text-center">
+                                                        <i class="bi bi-people display-4"></i>
+                                                        <h5 class="card-title mt-3">Create Crew</h5>
+                                                        <p class="card-text">Create a new crew with multiple agents and tasks.</p>
+                                                        <button class="btn btn-primary" data-bs-toggle="tab" data-bs-target="#crews">
+                                                            Create Crew
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Agents -->
+                    <div class="tab-pane fade" id="agents">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Agents</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#create-agent-modal">
+                                    <i class="bi bi-plus"></i> Create Agent
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Role</th>
+                                        <th>Goal</th>
+                                        <th>Model</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="agents-table">
+                                    <!-- Agents will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Tasks -->
+                    <div class="tab-pane fade" id="tasks">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Tasks</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#create-task-modal">
+                                    <i class="bi bi-plus"></i> Create Task
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Description</th>
+                                        <th>Agent</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tasks-table">
+                                    <!-- Tasks will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Crews -->
+                    <div class="tab-pane fade" id="crews">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Crews</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#create-crew-modal">
+                                    <i class="bi bi-plus"></i> Create Crew
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="table-responsive">
+                            <table class="table table-striped table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Name</th>
+                                        <th>Agents</th>
+                                        <th>Tasks</th>
+                                        <th>Process</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="crews-table">
+                                    <!-- Crews will be loaded here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Results -->
+                    <div class="tab-pane fade" id="results">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Development Plans</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <button type="button" class="btn btn-sm btn-primary me-2" id="run-development-plan">
+                                    <i class="bi bi-play"></i> Run Development Plan Process
+                                </button>
+                                <button type="button" class="btn btn-sm btn-outline-secondary" id="refresh-results">
+                                    <i class="bi bi-arrow-repeat"></i> Refresh
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="alert alert-info">
+                            <h4 class="alert-heading">Development Plan Process</h4>
+                            <p>The development plan process uses CrewAI to analyze the codebase, create a development plan, search for open-source repositories, evaluate the plan, and create a final synthesized plan.</p>
+                            <p>This process may take several minutes to complete. The results will appear in the list below when complete.</p>
+                            <hr>
+                            <p class="mb-0">Click the "Run Development Plan Process" button to start the process.</p>
+                        </div>
+
+                        <div class="accordion" id="results-accordion">
+                            <!-- Results will be loaded here -->
+                        </div>
+                    </div>
+
+                    <!-- Settings -->
+                    <div class="tab-pane fade" id="settings">
+                        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                            <h1 class="h2">Settings</h1>
+                            <div class="btn-toolbar mb-2 mb-md-0">
+                                <button type="button" class="btn btn-sm btn-primary" id="save-settings">
+                                    <i class="bi bi-save"></i> Save Settings
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">API Keys</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="api-keys-form">
+                                            <div class="mb-3">
+                                                <label for="openai-api-key" class="form-label">OpenAI API Key</label>
+                                                <input type="password" class="form-control" id="openai-api-key" placeholder="sk-...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="anthropic-api-key" class="form-label">Anthropic API Key</label>
+                                                <input type="password" class="form-control" id="anthropic-api-key" placeholder="sk-ant-...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="groq-api-key" class="form-label">Groq API Key</label>
+                                                <input type="password" class="form-control" id="groq-api-key" placeholder="gsk_...">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="google-api-key" class="form-label">Google API Key</label>
+                                                <input type="password" class="form-control" id="google-api-key" placeholder="AIza...">
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">Default Settings</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <form id="default-settings-form">
+                                            <div class="mb-3">
+                                                <label for="default-model" class="form-label">Default Model</label>
+                                                <select class="form-select" id="default-model">
+                                                    <option value="openai">OpenAI</option>
+                                                    <option value="anthropic">Anthropic</option>
+                                                    <option value="groq" selected>Groq (Llama 4)</option>
+                                                    <option value="google">Google (Gemini)</option>
+                                                </select>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="default-temperature" class="form-label">Default Temperature</label>
+                                                <input type="range" class="form-range" min="0" max="1" step="0.1" id="default-temperature" value="0.7">
+                                                <div class="text-center" id="temperature-value">0.7</div>
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="default-max-tokens" class="form-label">Default Max Tokens</label>
+                                                <input type="number" class="form-control" id="default-max-tokens" value="4096">
+                                            </div>
+                                            <div class="mb-3">
+                                                <label for="default-process" class="form-label">Default Process</label>
+                                                <select class="form-select" id="default-process">
+                                                    <option value="sequential" selected>Sequential</option>
+                                                    <option value="hierarchical">Hierarchical</option>
+                                                </select>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="card mb-4">
+                                    <div class="card-header">
+                                        <h5 class="card-title">VS Code Integration</h5>
+                                    </div>
+                                    <div class="card-body">
+                                        <p>Download the VS Code extension to integrate CrewAI with VS Code:</p>
+                                        <a href="/vscode-extension" class="btn btn-primary">
+                                            <i class="bi bi-download"></i> Download VS Code Extension
+                                        </a>
+                                        <p class="mt-3">Installation instructions:</p>
+                                        <ol>
+                                            <li>Download the extension</li>
+                                            <li>Open VS Code</li>
+                                            <li>Go to Extensions (Ctrl+Shift+X)</li>
+                                            <li>Click on the "..." button in the top-right corner</li>
+                                            <li>Select "Install from VSIX..."</li>
+                                            <li>Select the downloaded file</li>
+                                        </ol>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Agent Modal -->
+    <div class="modal fade" id="create-agent-modal" tabindex="-1" aria-labelledby="create-agent-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create-agent-modal-label">Create Agent</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-agent-form">
+                        <div class="mb-3">
+                            <label for="agent-role" class="form-label">Role</label>
+                            <input type="text" class="form-control" id="agent-role" placeholder="e.g., Researcher, Developer, Analyst">
+                        </div>
+                        <div class="mb-3">
+                            <label for="agent-goal" class="form-label">Goal</label>
+                            <input type="text" class="form-control" id="agent-goal" placeholder="e.g., Research and gather information, Develop code">
+                        </div>
+                        <div class="mb-3">
+                            <label for="agent-backstory" class="form-label">Backstory</label>
+                            <textarea class="form-control" id="agent-backstory" rows="3" placeholder="Provide a backstory for the agent"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="agent-model" class="form-label">Model</label>
+                            <select class="form-select" id="agent-model">
+                                <option value="openai">OpenAI</option>
+                                <option value="anthropic">Anthropic</option>
+                                <option value="groq" selected>Groq (Llama 4)</option>
+                                <option value="google">Google (Gemini)</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agent-verbose" checked>
+                            <label class="form-check-label" for="agent-verbose">Verbose</label>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="agent-allow-delegation">
+                            <label class="form-check-label" for="agent-allow-delegation">Allow Delegation</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="create-agent-btn" onclick="createAgentDirectly()">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Task Modal -->
+    <div class="modal fade" id="create-task-modal" tabindex="-1" aria-labelledby="create-task-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create-task-modal-label">Create Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-task-form">
+                        <div class="mb-3">
+                            <label for="task-description" class="form-label">Description</label>
+                            <textarea class="form-control" id="task-description" rows="3" placeholder="Describe the task"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-expected-output" class="form-label">Expected Output</label>
+                            <textarea class="form-control" id="task-expected-output" rows="2" placeholder="Describe the expected output"></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-agent" class="form-label">Agent</label>
+                            <select class="form-select" id="task-agent">
+                                <!-- Agents will be loaded here -->
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="task-context" class="form-label">Context (Optional)</label>
+                            <select class="form-select" id="task-context" multiple>
+                                <!-- Tasks will be loaded here -->
+                            </select>
+                            <div class="form-text">Hold Ctrl/Cmd to select multiple tasks as context</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="create-task-btn">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create Crew Modal -->
+    <div class="modal fade" id="create-crew-modal" tabindex="-1" aria-labelledby="create-crew-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="create-crew-modal-label">Create Crew</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="create-crew-form">
+                        <div class="mb-3">
+                            <label for="crew-name" class="form-label">Name</label>
+                            <input type="text" class="form-control" id="crew-name" placeholder="e.g., Research Team, Development Crew">
+                        </div>
+                        <div class="mb-3">
+                            <label for="crew-agents" class="form-label">Agents</label>
+                            <select class="form-select" id="crew-agents" multiple>
+                                <!-- Agents will be loaded here -->
+                            </select>
+                            <div class="form-text">Hold Ctrl/Cmd to select multiple agents</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="crew-tasks" class="form-label">Tasks</label>
+                            <select class="form-select" id="crew-tasks" multiple>
+                                <!-- Tasks will be loaded here -->
+                            </select>
+                            <div class="form-text">Hold Ctrl/Cmd to select multiple tasks</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="crew-process" class="form-label">Process</label>
+                            <select class="form-select" id="crew-process">
+                                <option value="sequential" selected>Sequential</option>
+                                <option value="hierarchical">Hierarchical</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 form-check">
+                            <input type="checkbox" class="form-check-input" id="crew-verbose" checked>
+                            <label class="form-check-label" for="crew-verbose">Verbose</label>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-primary" id="create-crew-btn">Create</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Result Modal -->
+    <div class="modal fade" id="view-result-modal" tabindex="-1" aria-labelledby="view-result-modal-label" aria-hidden="true">
+        <div class="modal-dialog modal-xl">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="view-result-modal-label">Result</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <pre id="result-content" class="p-3 bg-light"></pre>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id="copy-result-btn">
+                        <i class="bi bi-clipboard"></i> Copy
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/showdown@2.1.0/dist/showdown.min.js"></script>
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/crewai_app.js') }}"></script>
+
+    <!-- Inline script for agent creation -->
+    <script>
+        // Function to create an agent directly
+        function createAgentDirectly() {
+            console.log('createAgentDirectly function called');
+
+            // Get form data
+            const role = document.getElementById('agent-role').value;
+            const goal = document.getElementById('agent-goal').value;
+            const backstory = document.getElementById('agent-backstory').value;
+            const model = document.getElementById('agent-model').value;
+            const verbose = document.getElementById('agent-verbose').checked;
+            const allowDelegation = document.getElementById('agent-allow-delegation').checked;
+
+            console.log('Form data:', { role, goal, backstory, model, verbose, allowDelegation });
+
+            // Validate form data
+            if (!role) {
+                alert('Role is required');
+                return;
+            }
+
+            if (!goal) {
+                alert('Goal is required');
+                return;
+            }
+
+            // Prepare data for the server
+            const data = {
+                role: role,
+                goal: goal,
+                backstory: backstory || 'You are an AI agent.',
+                verbose: verbose,
+                allow_delegation: allowDelegation,
+                llm_config: {
+                    provider: model,
+                    model: null,  // Use default model for the provider
+                    temperature: 0.7  // Use default temperature
+                }
+            };
+
+            console.log('Sending data to server:', data);
+
+            // Send data to the server
+            fetch('/api/agents', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(response => {
+                console.log('Response status:', response.status);
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Agent created:', data);
+
+                // Close the modal
+                const modal = bootstrap.Modal.getInstance(document.getElementById('create-agent-modal'));
+                if (modal) {
+                    modal.hide();
+                }
+
+                // Show success message
+                alert('Agent created successfully!');
+
+                // Clear the form
+                document.getElementById('agent-role').value = '';
+                document.getElementById('agent-goal').value = '';
+                document.getElementById('agent-backstory').value = '';
+                document.getElementById('agent-model').value = 'groq';
+                document.getElementById('agent-verbose').checked = true;
+                document.getElementById('agent-allow-delegation').checked = false;
+
+                // Reload the page to show the new agent
+                window.location.reload();
+            })
+            .catch(error => {
+                console.error('Error creating agent:', error);
+                alert('Error creating agent. Please try again.');
+            });
+        }
+
+        // Wait for the DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM fully loaded');
+
+            // Get the create agent button
+            const createAgentBtn = document.getElementById('create-agent-btn');
+            console.log('createAgentBtn:', createAgentBtn);
+
+            // Add click event listener
+            if (createAgentBtn) {
+                console.log('Adding inline event listener to createAgentBtn');
+                createAgentBtn.addEventListener('click', function() {
+                    console.log('createAgentBtn clicked from inline script');
+                    createAgentDirectly();
+                });
+            } else {
+                console.log('createAgentBtn not found in inline script');
+            }
+        });
+    </script>
+</body>
+</html>

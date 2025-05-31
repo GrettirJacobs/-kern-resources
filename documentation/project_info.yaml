@@ -1,0 +1,162 @@
+project_info:
+  name: Kern Resources
+  version: 0.1.0
+  description: A comprehensive resource management and AI integration platform
+  last_updated: 2025-04-20
+
+codebase_purpose:
+  summary: >
+    Kern Resources is a platform designed to manage and organize resources using advanced AI techniques.
+    It integrates various AI models and frameworks to provide intelligent resource management, search,
+    and analysis capabilities.
+  key_components:
+    - Resource management system
+    - Novel memory system for AI-enhanced information retrieval
+    - CrewAI integration for multi-agent AI workflows
+    - GUI interfaces for both the memory system and CrewAI
+    - API integrations with multiple LLM providers (OpenAI, Anthropic, Groq, Google)
+  target_users: Hobbyist developers and researchers who need to organize and analyze large collections of resources
+
+novel_memory_system:
+  description: A multi-layered memory system designed to enhance AI's ability to recall and utilize information
+  layers:
+    - name: Exact Duplicates
+      description: Storage of exact copies of information for precise reference
+    - name: Machine-Readable Tags
+      description: Structured metadata and tags for efficient retrieval and filtering
+    - name: AI Summaries
+      description: AI-generated summaries of content for quick understanding and context
+    - name: AI Meta-Commentaries
+      description: Higher-level AI analysis and connections between different pieces of information
+  search_capabilities:
+    vector_search: Semantic search using vector embeddings
+    relational_tags: Structured search using metadata and relationships
+    hybrid_approach: Combination of vector and relational search for optimal results
+  implementation_status: Partially implemented, with ongoing enhancements
+
+ai_integrations:
+  crewai:
+    description: A framework for orchestrating multiple AI agents to work together on complex tasks
+    role_in_codebase: Provides the ability to create teams of specialized AI agents that can collaborate on tasks
+    implementation_status: Basic integration complete, GUI interface in development
+    models_supported:
+      - OpenAI (gpt-4o)
+      - Anthropic (claude-3-opus-20240229)
+      - Groq (meta-llama/llama-4-maverick-17b-128e-instruct)
+      - Google (gemini-1.5-pro)
+  agent2agent:
+    description: Google's framework for agent-to-agent communication
+    role_in_codebase: Planned integration to enhance communication between AI agents
+    implementation_status: Planned for future development
+  model_context_protocol:
+    description: Google's protocol for managing context in LLM interactions
+    role_in_codebase: Planned integration to improve context management
+    implementation_status: Planned for future development
+  llm_providers:
+    openai:
+      models: [gpt-4o]
+      status: Integrated
+    anthropic:
+      models: [claude-3-opus-20240229]
+      status: Integrated
+    groq:
+      models: [meta-llama/llama-4-maverick-17b-128e-instruct]
+      status: Integrated
+    google:
+      models: [gemini-1.5-pro]
+      status: Integrated
+
+development_history:
+  major_milestones:
+    - date: Early 2025
+      description: Initial concept and architecture design
+    - date: March 2025
+      description: Development of the novel memory system
+    - date: April 2025
+      description: Integration of CrewAI and development of the GUI
+  recent_developments:
+    - Fixed CrewAI integration to properly detect and use the installed CrewAI package
+    - Disabled automatic browser opening in the CrewAI GUI
+    - Added dashboard functionality to the CrewAI GUI
+    - Implemented API calls to fetch system status and available models
+    - Added local storage for API keys and default settings
+
+remaining_development:
+  high_priority:
+    - Complete the CrewAI GUI functionality (agent, task, and crew creation)
+    - Implement the ability to run crews and view results
+    - Enhance the memory system with better search capabilities
+    - Integrate the memory system with CrewAI
+  medium_priority:
+    - Add Agent2Agent (A2A) integration
+    - Implement Model Context Protocol (MCP)
+    - Develop more advanced CrewAI templates and workflows
+    - Create a comprehensive dashboard for monitoring and analytics
+  low_priority:
+    - Add support for additional LLM providers
+    - Implement advanced visualization tools
+    - Create a plugin system for extending functionality
+    - Develop a mobile interface
+
+known_challenges:
+  - area: API Key Management
+    description: Securely storing and managing API keys for multiple providers
+    potential_solutions:
+      - Use environment variables
+      - Implement encrypted storage
+      - Add user authentication
+  - area: Performance
+    description: Ensuring good performance with large numbers of resources
+    potential_solutions:
+      - Optimize database queries
+      - Implement caching
+      - Use asynchronous processing
+  - area: Integration Complexity
+    description: Managing the complexity of integrating multiple AI frameworks
+    potential_solutions:
+      - Create abstraction layers
+      - Implement modular architecture
+      - Develop comprehensive testing
+  - area: Error Handling
+    description: Providing robust error handling and recovery
+    potential_solutions:
+      - Implement comprehensive logging
+      - Add retry mechanisms
+      - Create fallback options
+
+current_task:
+  name: CrewAI GUI Dashboard Implementation
+  description: Adding functionality to the dashboard buttons in the CrewAI GUI
+  status: In progress
+  details: >
+    We've created a JavaScript file (dashboard.js) to implement the dashboard functionality,
+    including status updates, model information, and quick start buttons. The dashboard now
+    shows system status and available models, and the refresh button updates this information.
+    The quick start buttons navigate to the appropriate tabs and open the corresponding modals.
+    The settings form saves API keys and default settings to local storage.
+  next_steps:
+    - Test the dashboard functionality more thoroughly
+    - Implement the agent, task, and crew creation functionality
+    - Add the ability to run crews and view results
+    - Improve error handling and user feedback
+
+user_preferences:
+  open_source:
+    preference: Use already tested open source code whenever practicable
+    licenses: [MIT, Apache 2.0]
+    attribution: Always give appropriate credit to the creator of the code in a ReadMe file
+  novel_memory_system:
+    preference: Keep and enhance the novel memory system ideas as part of the development process
+    integration: Use the novel memory system when practicable when developing the CrewAI framework and other tools
+  suggestions:
+    preference: Always open to suggestions
+    action: Bring alternative ideas to attention when they are considered more practical
+  practical_implementation:
+    preference: Do not implement the novel memory system when a known/efficient alternative is called for
+    example: Use indexing if it's the best way to extract data from a database quickly
+  documentation:
+    preference: Document each stage of the development process
+    purpose: Make it easy for an interested party to understand why certain choices were made and others not
+  priority:
+    preference: Focus on getting CrewAI functional
+    reason: Once functional, CrewAI can act as part of the synergistic team

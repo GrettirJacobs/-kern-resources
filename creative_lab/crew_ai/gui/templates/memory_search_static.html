@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Search - Kern Resources</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            padding-top: 20px;
+            padding-bottom: 40px;
+            background-color: #f5f7fb;
+        }
+        .container {
+            max-width: 1200px;
+        }
+        .nav-tabs .nav-link {
+            color: #495057;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+        }
+        .search-header {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .search-results {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+        }
+        .search-filters {
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .memory-card {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.2s ease;
+        }
+        .memory-card:hover {
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        .memory-content {
+            max-height: 100px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        .memory-metadata {
+            color: #6c757d;
+            font-size: 0.875rem;
+        }
+        .memory-tags {
+            margin-top: 10px;
+        }
+        .memory-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            font-size: 0.75rem;
+            font-weight: 600;
+            line-height: 1;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: 0.25rem;
+            background-color: #f0f0f0;
+            color: #495057;
+            margin-right: 5px;
+            margin-bottom: 5px;
+        }
+        .search-type-selector {
+            margin-bottom: 20px;
+        }
+        .search-stats {
+            color: #6c757d;
+            font-size: 0.875rem;
+            margin-bottom: 15px;
+        }
+        .pagination {
+            margin-top: 20px;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h3><i class="bi bi-search"></i> Memory Search</h3>
+            </div>
+            <div class="card-body">
+                <!-- Search Header -->
+                <div class="search-header">
+                    <form id="searchForm">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="searchQuery" name="query" placeholder="Search memories..." aria-label="Search memories">
+                            <button class="btn btn-primary" type="submit">
+                                <i class="bi bi-search"></i> Search
+                            </button>
+                        </div>
+                        
+                        <!-- Search Type Selector -->
+                        <div class="search-type-selector">
+                            <div class="btn-group" role="group" aria-label="Search type">
+                                <input type="radio" class="btn-check" name="searchType" id="vectorSearch" value="vector" checked>
+                                <label class="btn btn-outline-primary" for="vectorSearch">Vector Search</label>
+                                
+                                <input type="radio" class="btn-check" name="searchType" id="tagSearch" value="tag">
+                                <label class="btn btn-outline-primary" for="tagSearch">Tag Search</label>
+                                
+                                <input type="radio" class="btn-check" name="searchType" id="dualSearch" value="dual">
+                                <label class="btn btn-outline-primary" for="dualSearch">Dual Search</label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                
+                <div class="row">
+                    <!-- Filters Column -->
+                    <div class="col-md-3">
+                        <div class="search-filters">
+                            <h5>Filters</h5>
+                            <hr>
+                            
+                            <!-- Tags Filter -->
+                            <div class="mb-3">
+                                <label for="tagFilter" class="form-label">Tags</label>
+                                <select class="form-select" id="tagFilter" multiple>
+                                    <!-- Tags will be populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <!-- Date Range Filter -->
+                            <div class="mb-3">
+                                <label class="form-label">Date Range</label>
+                                <div class="input-group mb-2">
+                                    <span class="input-group-text">From</span>
+                                    <input type="date" class="form-control" id="dateFrom">
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-text">To</span>
+                                    <input type="date" class="form-control" id="dateTo">
+                                </div>
+                            </div>
+                            
+                            <!-- Source Filter -->
+                            <div class="mb-3">
+                                <label for="sourceFilter" class="form-label">Source</label>
+                                <select class="form-select" id="sourceFilter">
+                                    <option value="">All Sources</option>
+                                    <!-- Sources will be populated dynamically -->
+                                </select>
+                            </div>
+                            
+                            <button id="applyFilters" class="btn btn-primary w-100">Apply Filters</button>
+                            <button id="resetFilters" class="btn btn-outline-secondary w-100 mt-2">Reset Filters</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Results Column -->
+                    <div class="col-md-9">
+                        <div class="search-results">
+                            <div class="search-stats">
+                                <span id="resultCount">0</span> results found (<span id="searchTime">0</span> seconds)
+                            </div>
+                            
+                            <!-- Results Container -->
+                            <div id="resultsContainer">
+                                <!-- Results will be populated dynamically -->
+                                <div class="text-center py-5">
+                                    <i class="bi bi-search" style="font-size: 3rem; color: #adb5bd;"></i>
+                                    <p class="mt-3">Enter a search query to find memories</p>
+                                </div>
+                            </div>
+                            
+                            <!-- Pagination -->
+                            <nav aria-label="Search results pages">
+                                <ul class="pagination" id="pagination">
+                                    <!-- Pagination will be populated dynamically -->
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Memory Detail Modal -->
+        <div class="modal fade" id="memoryDetailModal" tabindex="-1" aria-labelledby="memoryDetailModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="memoryDetailModalLabel">Memory Details</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body" id="memoryDetailContent">
+                        <!-- Memory details will be populated dynamically -->
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Mock data for testing
+        const mockTags = {
+            "category": ["healthcare", "education", "housing", "employment"],
+            "location": ["bakersfield", "kern county", "delano", "taft"],
+            "status": ["active", "inactive", "pending"],
+            "type": ["service", "resource", "program", "event"]
+        };
+        
+        const mockResults = [
+            {
+                "memory_id": "mock_memory_0",
+                "content": "Mock memory content about healthcare resources. This is a detailed description of a healthcare resource in Bakersfield, California. The resource provides medical services to low-income families and individuals without insurance.",
+                "metadata": {
+                    "source": "Mock Source",
+                    "timestamp": "2025-04-25T12:00:00Z"
+                },
+                "tags": [
+                    {"type": "category", "value": "healthcare"},
+                    {"type": "location", "value": "bakersfield"}
+                ],
+                "score": 0.95
+            },
+            {
+                "memory_id": "mock_memory_1",
+                "content": "Another mock memory about healthcare resources in Kern County. This resource focuses on mental health services for children and adolescents.",
+                "metadata": {
+                    "source": "Mock Source",
+                    "timestamp": "2025-04-24T10:30:00Z"
+                },
+                "tags": [
+                    {"type": "category", "value": "healthcare"},
+                    {"type": "location", "value": "kern county"}
+                ],
+                "score": 0.85
+            },
+            {
+                "memory_id": "mock_memory_2",
+                "content": "Mock memory about educational resources in Bakersfield. This program provides after-school tutoring for K-12 students.",
+                "metadata": {
+                    "source": "Mock Source",
+                    "timestamp": "2025-04-23T14:15:00Z"
+                },
+                "tags": [
+                    {"type": "category", "value": "education"},
+                    {"type": "location", "value": "bakersfield"}
+                ],
+                "score": 0.75
+            }
+        ];
+        
+        const mockMemory = {
+            "memory_id": "mock_memory_0",
+            "content": "Mock memory content about healthcare resources. This is a detailed description of a healthcare resource in Bakersfield, California. The resource provides medical services to low-income families and individuals without insurance. Services include primary care, pediatrics, women's health, and mental health counseling. The facility is open Monday through Friday from 8:00 AM to 5:00 PM.",
+            "metadata": {
+                "source": "Mock Source",
+                "timestamp": "2025-04-25T12:00:00Z",
+                "created_by": "Memory System",
+                "last_updated": "2025-04-25T12:00:00Z",
+                "version": "1.0"
+            },
+            "tags": [
+                {"type": "category", "value": "healthcare"},
+                {"type": "location", "value": "bakersfield"},
+                {"type": "status", "value": "active"},
+                {"type": "type", "value": "service"}
+            ],
+            "ai_analysis": {
+                "summary": "Healthcare resource providing medical services to low-income families in Bakersfield.",
+                "key_points": "Primary care, pediatrics, women's health, mental health counseling.",
+                "sentiment": "Positive",
+                "relevance": "High"
+            },
+            "meta_analyses": [
+                {
+                    "meta_id": "meta_analysis_0_1",
+                    "meta_analysis": {
+                        "content": "This resource is part of a network of healthcare providers in Kern County that serve underrepresented communities.",
+                        "related_resources": ["mock_memory_1", "mock_memory_2"]
+                    }
+                }
+            ]
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.getElementById('searchForm');
+            const resultsContainer = document.getElementById('resultsContainer');
+            const resultCount = document.getElementById('resultCount');
+            const searchTime = document.getElementById('searchTime');
+            const pagination = document.getElementById('pagination');
+            const tagFilter = document.getElementById('tagFilter');
+            const sourceFilter = document.getElementById('sourceFilter');
+            const applyFilters = document.getElementById('applyFilters');
+            const resetFilters = document.getElementById('resetFilters');
+            
+            // Load tags on page load
+            loadTags();
+            
+            // Load sources on page load
+            loadSources();
+            
+            // Handle search form submission
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                performSearch(1);
+            });
+            
+            // Handle filter application
+            applyFilters.addEventListener('click', function() {
+                performSearch(1);
+            });
+            
+            // Handle filter reset
+            resetFilters.addEventListener('click', function() {
+                tagFilter.value = '';
+                sourceFilter.value = '';
+                document.getElementById('dateFrom').value = '';
+                document.getElementById('dateTo').value = '';
+                performSearch(1);
+            });
+            
+            // Function to load tags
+            function loadTags() {
+                // Use mock data for testing
+                const tags = mockTags;
+                tagFilter.innerHTML = '';
+                
+                // Populate tag filter
+                for (const tagType in tags) {
+                    const tagValues = tags[tagType];
+                    const optgroup = document.createElement('optgroup');
+                    optgroup.label = tagType;
+                    
+                    tagValues.forEach(tagValue => {
+                        const option = document.createElement('option');
+                        option.value = JSON.stringify({ type: tagType, value: tagValue });
+                        option.textContent = `${tagValue} (${tagType})`;
+                        optgroup.appendChild(option);
+                    });
+                    
+                    tagFilter.appendChild(optgroup);
+                }
+            }
+            
+            // Function to load sources
+            function loadSources() {
+                // Use mock data for testing
+                const sources = ['Excel Import', 'Manual Entry', 'Web Scraping', 'API Import'];
+                
+                sourceFilter.innerHTML = '<option value="">All Sources</option>';
+                sources.forEach(source => {
+                    const option = document.createElement('option');
+                    option.value = source;
+                    option.textContent = source;
+                    sourceFilter.appendChild(option);
+                });
+            }
+            
+            // Function to perform search
+            function performSearch(page = 1) {
+                const query = document.getElementById('searchQuery').value;
+                const searchType = document.querySelector('input[name="searchType"]:checked').value;
+                
+                // Get selected tags
+                const selectedTags = Array.from(tagFilter.selectedOptions).map(option => JSON.parse(option.value));
+                
+                // Get date range
+                const dateFrom = document.getElementById('dateFrom').value;
+                const dateTo = document.getElementById('dateTo').value;
+                
+                // Get source
+                const source = sourceFilter.value;
+                
+                // Show loading state
+                resultsContainer.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Searching memories...</p>
+                    </div>
+                `;
+                
+                // Use mock data for testing
+                setTimeout(() => {
+                    displayResults({
+                        success: true,
+                        search_type: searchType,
+                        query: query,
+                        results: mockResults,
+                        total: mockResults.length,
+                        limit: 10,
+                        offset: (page - 1) * 10
+                    }, page);
+                }, 500);
+            }
+            
+            // Function to display search results
+            function displayResults(data, currentPage) {
+                const results = data.results;
+                const total = data.total;
+                const limit = data.limit;
+                const searchTypeDisplay = data.search_type.charAt(0).toUpperCase() + data.search_type.slice(1);
+                
+                // Update stats
+                resultCount.textContent = total;
+                searchTime.textContent = '0.5'; // This would be replaced with actual search time
+                
+                // Clear results container
+                resultsContainer.innerHTML = '';
+                
+                if (results.length === 0) {
+                    resultsContainer.innerHTML = `
+                        <div class="text-center py-5">
+                            <i class="bi bi-emoji-frown" style="font-size: 3rem; color: #adb5bd;"></i>
+                            <p class="mt-3">No results found for "${data.query}"</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Display each result
+                results.forEach(result => {
+                    const memoryCard = document.createElement('div');
+                    memoryCard.className = 'memory-card';
+                    memoryCard.dataset.memoryId = result.memory_id;
+                    
+                    // Create content excerpt
+                    const content = result.content || '';
+                    const contentExcerpt = content.length > 300 ? content.substring(0, 300) + '...' : content;
+                    
+                    // Create tags HTML
+                    const tagsHtml = (result.tags || []).map(tag => 
+                        `<span class="memory-tag">${tag.value} (${tag.type})</span>`
+                    ).join('');
+                    
+                    // Create score display based on search type
+                    let scoreHtml = '';
+                    if (data.search_type === 'vector') {
+                        scoreHtml = `<span class="badge bg-primary">Score: ${(result.score * 100).toFixed(1)}%</span>`;
+                    } else if (data.search_type === 'tag') {
+                        scoreHtml = `<span class="badge bg-success">Tag Match</span>`;
+                    } else if (data.search_type === 'dual') {
+                        scoreHtml = `
+                            <span class="badge bg-primary">Vector: ${(result.vector_score * 100).toFixed(1)}%</span>
+                            <span class="badge bg-success">Tag: ${(result.tag_score * 100).toFixed(1)}%</span>
+                            <span class="badge bg-info">Combined: ${(result.combined_score * 100).toFixed(1)}%</span>
+                        `;
+                    }
+                    
+                    // Build the memory card HTML
+                    memoryCard.innerHTML = `
+                        <div class="memory-content">${contentExcerpt}</div>
+                        <div class="memory-metadata">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <strong>ID:</strong> ${result.memory_id}
+                                    <br>
+                                    <strong>Source:</strong> ${result.metadata?.source || 'Unknown'}
+                                    <br>
+                                    <strong>Created:</strong> ${result.metadata?.timestamp || 'Unknown'}
+                                </div>
+                                <div class="col-md-6 text-md-end">
+                                    ${scoreHtml}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="memory-tags">
+                            ${tagsHtml}
+                        </div>
+                        <div class="mt-3">
+                            <button class="btn btn-sm btn-outline-primary view-memory-btn">View Details</button>
+                        </div>
+                    `;
+                    
+                    resultsContainer.appendChild(memoryCard);
+                });
+                
+                // Add event listeners to view buttons
+                document.querySelectorAll('.view-memory-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const memoryId = this.closest('.memory-card').dataset.memoryId;
+                        viewMemoryDetails(memoryId);
+                    });
+                });
+                
+                // Create pagination
+                createPagination(total, limit, currentPage);
+            }
+            
+            // Function to create pagination
+            function createPagination(total, limit, currentPage) {
+                const totalPages = Math.ceil(total / limit);
+                pagination.innerHTML = '';
+                
+                if (totalPages <= 1) {
+                    return;
+                }
+                
+                // Previous button
+                const prevLi = document.createElement('li');
+                prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+                prevLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage - 1}">Previous</a>`;
+                pagination.appendChild(prevLi);
+                
+                // Page numbers
+                const maxPages = 5;
+                let startPage = Math.max(1, currentPage - Math.floor(maxPages / 2));
+                let endPage = Math.min(totalPages, startPage + maxPages - 1);
+                
+                if (endPage - startPage + 1 < maxPages) {
+                    startPage = Math.max(1, endPage - maxPages + 1);
+                }
+                
+                for (let i = startPage; i <= endPage; i++) {
+                    const pageLi = document.createElement('li');
+                    pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                    pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                    pagination.appendChild(pageLi);
+                }
+                
+                // Next button
+                const nextLi = document.createElement('li');
+                nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+                nextLi.innerHTML = `<a class="page-link" href="#" data-page="${currentPage + 1}">Next</a>`;
+                pagination.appendChild(nextLi);
+                
+                // Add event listeners to pagination links
+                document.querySelectorAll('.page-link').forEach(link => {
+                    link.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        if (!this.parentElement.classList.contains('disabled')) {
+                            const page = parseInt(this.dataset.page);
+                            performSearch(page);
+                        }
+                    });
+                });
+            }
+            
+            // Function to view memory details
+            function viewMemoryDetails(memoryId) {
+                const modalContent = document.getElementById('memoryDetailContent');
+                
+                // Show loading state
+                modalContent.innerHTML = `
+                    <div class="text-center py-5">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                        <p class="mt-3">Loading memory details...</p>
+                    </div>
+                `;
+                
+                // Show the modal
+                const modal = new bootstrap.Modal(document.getElementById('memoryDetailModal'));
+                modal.show();
+                
+                // Use mock data for testing
+                setTimeout(() => {
+                    const memory = mockMemory;
+                    
+                    // Create tags HTML
+                    const tagsHtml = (memory.tags || []).map(tag => 
+                        `<span class="memory-tag">${tag.value} (${tag.type})</span>`
+                    ).join('');
+                    
+                    // Create metadata HTML
+                    let metadataHtml = '<h6>Metadata</h6><ul class="list-group mb-3">';
+                    for (const key in memory.metadata || {}) {
+                        metadataHtml += `<li class="list-group-item"><strong>${key}:</strong> ${memory.metadata[key]}</li>`;
+                    }
+                    metadataHtml += '</ul>';
+                    
+                    // Create AI analysis HTML
+                    let analysisHtml = '';
+                    if (memory.ai_analysis) {
+                        analysisHtml = '<h6>AI Analysis</h6><div class="card mb-3"><div class="card-body">';
+                        for (const key in memory.ai_analysis) {
+                            analysisHtml += `<p><strong>${key}:</strong> ${memory.ai_analysis[key]}</p>`;
+                        }
+                        analysisHtml += '</div></div>';
+                    }
+                    
+                    // Create meta-analyses HTML
+                    let metaAnalysesHtml = '';
+                    if (memory.meta_analyses && memory.meta_analyses.length > 0) {
+                        metaAnalysesHtml = '<h6>Meta Analyses</h6>';
+                        memory.meta_analyses.forEach(meta => {
+                            metaAnalysesHtml += `
+                                <div class="card mb-3">
+                                    <div class="card-header">
+                                        <strong>Meta ID:</strong> ${meta.meta_id}
+                                    </div>
+                                    <div class="card-body">
+                                        <p>${meta.meta_analysis.content || 'No content available'}</p>
+                                    </div>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    // Update modal content
+                    modalContent.innerHTML = `
+                        <h5>Memory ID: ${memory.memory_id}</h5>
+                        <div class="card mb-3">
+                            <div class="card-header">Content</div>
+                            <div class="card-body">
+                                <p>${memory.content || 'No content available'}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="memory-tags mb-3">
+                            ${tagsHtml}
+                        </div>
+                        
+                        ${metadataHtml}
+                        ${analysisHtml}
+                        ${metaAnalysesHtml}
+                    `;
+                }, 500);
+            }
+        });
+    </script>
+</body>
+</html>

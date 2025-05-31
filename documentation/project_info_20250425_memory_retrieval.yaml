@@ -1,0 +1,234 @@
+project_name: Kern Resources
+date: '2025-04-25'
+version: 0.5.0
+
+purpose:
+  summary: A comprehensive resource management system with advanced memory capabilities and AI-driven interfaces
+  key_features:
+    - Novel four-layer memory system for storing and retrieving information
+    - Dual search capabilities (vector and tag-based)
+    - CrewAI integration for complex task handling
+    - AI-driven conversational interface
+    - Excel data integration for real-world resources
+  target_users:
+    - Resource managers
+    - Community service providers
+    - Social workers
+    - Healthcare professionals
+    - Educational institutions
+
+novel_memory_system:
+  architecture: Four-layer memory architecture
+  layers:
+    - name: 'Layer 1: Exact Duplicates'
+      description: Raw storage of original content without modification
+      implementation: Qdrant collection 'exact_storage'
+      purpose: Preserve original information exactly as received
+    - name: 'Layer 2: Machine-Readable Tags'
+      description: Structured metadata and tags for efficient retrieval
+      implementation: Qdrant collection 'memory_tags'
+      purpose: Enable precise filtering and categorization
+    - name: 'Layer 3: AI Summaries'
+      description: AI-generated summaries and analyses of content
+      implementation: OpenAI GPT models for analysis
+      purpose: Provide condensed, insightful views of information
+    - name: 'Layer 4: AI Meta-Commentaries'
+      description: Higher-level insights about patterns across multiple memories
+      implementation: Anthropic Claude models for meta-analysis
+      purpose: Identify connections and patterns across the knowledge base
+  search_capabilities:
+    - name: Vector Search
+      description: Semantic similarity-based search using embeddings
+      implementation: Sentence transformers and Qdrant vector search
+    - name: Tag Search
+      description: Filtering by metadata tags and attributes
+      implementation: Structured queries on Layer 2 data
+    - name: Dual Search
+      description: Combined approach using both vector and tag search
+      implementation: Weighted scoring algorithm combining both methods
+
+tools_integration:
+  crewai:
+    purpose: Orchestrate complex tasks using multiple AI agents
+    implementation: CrewAI framework with custom agents and tools
+    models:
+      - name: Llama 4 Maverick
+        provider: Groq
+        role: Lead agent
+      - name: GPT-4o
+        provider: OpenAI
+        role: Specialized tasks
+      - name: Claude 3 Opus
+        provider: Anthropic
+        role: Analysis and reasoning
+      - name: Gemini 1.5 Pro
+        provider: Google
+        role: Research and information gathering
+    tools:
+      - Excel data processing
+      - Memory system integration
+      - Web crawling (planned)
+      - Document handling (planned)
+  agent2agent:
+    purpose: Enable sophisticated communication between AI agents
+    implementation: Adaptation of Google's A2A framework
+    status: Planned for future integration
+  vector_database:
+    name: Qdrant
+    purpose: Store and retrieve vector embeddings for semantic search
+    implementation: Local Qdrant instance with collections for each memory layer
+  embedding_models:
+    name: Sentence Transformers
+    model: all-MiniLM-L6-v2
+    vector_size: 384
+    purpose: Generate embeddings for semantic search
+
+development_history:
+  phases:
+    - name: Initial Concept
+      description: Development of the novel memory system concept
+      key_milestones:
+        - Four-layer memory architecture design
+        - Vector and tag search capabilities
+    - name: Memory System Implementation
+      description: Implementation of the core memory system
+      key_milestones:
+        - Qdrant integration for vector storage
+        - Layer implementation and testing
+    - name: CrewAI Integration
+      description: Integration of CrewAI for complex task handling
+      key_milestones:
+        - Multi-model agent configuration
+        - Task delegation and coordination
+    - name: Excel Data Integration
+      description: Implementation of Excel data processing capabilities
+      key_milestones:
+        - Excel analyzer implementation
+        - Memory storage of Excel data
+    - name: Memory Retrieval Interface
+      description: Development of the memory search and retrieval interface
+      key_milestones:
+        - Search API implementation
+        - UI design and implementation
+        - Testing with mock data
+      current_phase: true
+
+remaining_development:
+  major_tasks:
+    - name: Conversational Interface
+      description: Implement natural language interface for memory retrieval
+      subtasks:
+        - Design conversation flow
+        - Implement context-aware responses
+        - Integrate with memory search
+      priority: High
+    - name: Memory Visualization
+      description: Create visual representations of memory connections
+      subtasks:
+        - Implement graph view of related memories
+        - Create interactive visualization components
+        - Integrate with search interface
+      priority: Medium
+    - name: CrewAI Tool Enhancement
+      description: Add additional tools to CrewAI
+      subtasks:
+        - Implement web crawler
+        - Add document handler
+        - Create email processing tool
+      priority: Medium
+    - name: Performance Optimization
+      description: Optimize system performance for production use
+      subtasks:
+        - Implement caching mechanisms
+        - Optimize API calls
+        - Add rate limiting and monitoring
+      priority: Medium
+    - name: Deployment Preparation
+      description: Prepare system for production deployment
+      subtasks:
+        - Containerize application
+        - Set up CI/CD pipeline
+        - Configure production environment
+      priority: Low
+
+development_challenges:
+  technical_challenges:
+    - name: Flask Server Issues
+      description: Difficulties running Flask server in development environment
+      potential_solutions:
+        - Investigate environment configuration
+        - Try alternative server configurations
+        - Use static files for testing
+    - name: Memory System Integration
+      description: Ensuring seamless integration between memory system and other components
+      potential_solutions:
+        - Implement robust error handling
+        - Add fallback mechanisms
+        - Create comprehensive test suite
+    - name: Multi-Model Coordination
+      description: Coordinating multiple AI models with different capabilities
+      potential_solutions:
+        - Implement model-specific adapters
+        - Create unified API for model interaction
+        - Use CrewAI for orchestration
+  resource_challenges:
+    - name: API Costs
+      description: Managing costs of multiple API-based models
+      potential_solutions:
+        - Implement token usage tracking
+        - Add rate limiting
+        - Use local models where possible
+    - name: Development Environment
+      description: Maintaining consistent development environment across systems
+      potential_solutions:
+        - Containerize development environment
+        - Document environment setup
+        - Create setup scripts
+
+current_focus:
+  name: Memory Retrieval Interface
+  description: Implementing and testing the memory search and retrieval interface
+  current_status:
+    completed:
+      - Memory search module implementation
+      - Search API endpoints
+      - Basic UI design and implementation
+      - Testing with mock data
+    in_progress:
+      - Addressing Flask server issues
+      - Implementing static version for testing
+      - Planning conversational interface integration
+    next_steps:
+      - Integrate with main Flask app
+      - Implement dual-mode interface (structured and conversational)
+      - Enhance filtering and visualization capabilities
+      - Test with real data
+  technical_details:
+    memory_search_module:
+      file: creative_lab/crew_ai/gui/memory_search.py
+      key_functions:
+        - vector_search
+        - tag_search
+        - dual_search
+        - get_memory
+        - get_all_tags
+    api_endpoints:
+      base_url: /api
+      endpoints:
+        - path: /get-all-tags
+          method: GET
+          description: Get all unique tags in the memory system
+        - path: /search-memory
+          method: POST
+          description: Search for memories using vector, tag, or dual search
+        - path: /get-memory/<memory_id>
+          method: GET
+          description: Get a specific memory by ID
+    ui_components:
+      search_page: creative_lab/crew_ai/gui/templates/memory_search.html
+      static_version: creative_lab/crew_ai/gui/templates/memory_search_static.html
+      key_features:
+        - Responsive design using Bootstrap
+        - Filtering options for tags, date range, and source
+        - Detailed view for individual memories
+        - Pagination for search results

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Excel Analysis - CrewAI</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="/">CrewAI</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/upload">Upload</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/simple-analyze-excel">Analyze Excel</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/memory">Memory</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-5">
+        <div class="row justify-content-center">
+            <div class="col-md-10">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Simple Excel File Analysis</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="analyzeForm">
+                            <div class="mb-3">
+                                <label for="filePath" class="form-label">Excel File Path</label>
+                                <input type="text" class="form-control" id="filePath" name="filePath" required>
+                                <div class="form-text">Enter the full path to the Excel file</div>
+                            </div>
+                            <div class="mb-3">
+                                <label for="sheetName" class="form-label">Sheet Name (Optional)</label>
+                                <input type="text" class="form-control" id="sheetName" name="sheetName">
+                                <div class="form-text">Leave blank to use the first sheet</div>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Analyze</button>
+                        </form>
+
+                        <div class="mt-4 d-none" id="loadingSection">
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            </div>
+                            <p class="text-center mt-2">Analyzing Excel file...</p>
+                        </div>
+
+                        <div class="mt-4 d-none" id="resultSection">
+                            <h4>Analysis Results</h4>
+                            <div class="card">
+                                <div class="card-body">
+                                    <div id="analysisResult" class="markdown-body"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-4 d-none" id="errorSection">
+                            <div class="alert alert-danger" role="alert">
+                                <h4 class="alert-heading">Error</h4>
+                                <p id="errorMessage"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const analyzeForm = document.getElementById('analyzeForm');
+            const loadingSection = document.getElementById('loadingSection');
+            const resultSection = document.getElementById('resultSection');
+            const errorSection = document.getElementById('errorSection');
+            const analysisResult = document.getElementById('analysisResult');
+            const errorMessage = document.getElementById('errorMessage');
+
+            analyzeForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                // Get form data
+                const filePath = document.getElementById('filePath').value;
+                const sheetName = document.getElementById('sheetName').value;
+
+                // Show loading section
+                loadingSection.classList.remove('d-none');
+                resultSection.classList.add('d-none');
+                errorSection.classList.add('d-none');
+
+                // Disable form
+                const formElements = analyzeForm.elements;
+                for (let i = 0; i < formElements.length; i++) {
+                    formElements[i].disabled = true;
+                }
+
+                // Send request to analyze Excel file
+                fetch('/api/simple-analyze-excel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        filePath: filePath,
+                        sheetName: sheetName || null
+                    })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // Hide loading section
+                    loadingSection.classList.add('d-none');
+
+                    // Enable form
+                    for (let i = 0; i < formElements.length; i++) {
+                        formElements[i].disabled = false;
+                    }
+
+                    if (data.success) {
+                        // Show result section
+                        resultSection.classList.remove('d-none');
+                        
+                        // Convert markdown to HTML
+                        analysisResult.innerHTML = marked.parse(data.analysis);
+                    } else {
+                        // Show error section
+                        errorSection.classList.remove('d-none');
+                        errorMessage.textContent = data.error || 'An unknown error occurred';
+                    }
+                })
+                .catch(error => {
+                    // Hide loading section
+                    loadingSection.classList.add('d-none');
+
+                    // Enable form
+                    for (let i = 0; i < formElements.length; i++) {
+                        formElements[i].disabled = false;
+                    }
+
+                    // Show error section
+                    errorSection.classList.remove('d-none');
+                    errorMessage.textContent = error.message || 'An unknown error occurred';
+                });
+            });
+        });
+    </script>
+</body>
+</html>

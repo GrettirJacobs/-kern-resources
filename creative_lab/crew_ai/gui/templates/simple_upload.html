@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Upload Page</title>
+</head>
+<body>
+    <h1>Simple Upload Page</h1>
+    <p>This is a simplified version of the upload page.</p>
+    
+    <form action="/api/upload" method="post" enctype="multipart/form-data">
+        <div>
+            <label for="file">Select Excel File:</label>
+            <input type="file" id="file" name="file" accept=".xlsx,.xls,.csv">
+        </div>
+        <div style="margin-top: 20px;">
+            <button type="submit">Upload</button>
+        </div>
+    </form>
+</body>
+</html>

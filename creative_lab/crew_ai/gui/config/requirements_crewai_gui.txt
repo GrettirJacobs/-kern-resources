@@ -1,0 +1,36 @@
+# CrewAI GUI Requirements
+# Core Flask dependencies
+flask>=2.3.0
+flask-socketio>=5.3.0
+flask-cors>=4.0.0
+
+# CrewAI and AI dependencies
+crewai>=0.118.0
+pydantic>=2.0.0
+
+# Environment and configuration
+python-dotenv>=1.0.0
+
+# HTTP requests
+requests>=2.31.0
+
+# Excel processing (optional)
+pandas>=2.0.0
+openpyxl>=3.1.2
+xlrd>=2.0.1
+
+# Additional utilities
+pathlib2>=2.3.7
+typing-extensions>=4.7.0
+
+# Memory system dependencies (optional)
+qdrant-client>=1.6.0
+sentence-transformers>=2.2.0
+
+# Development and testing (optional)
+pytest>=7.4.0
+pytest-flask>=1.2.0
+
+# Executable building
+pyinstaller>=5.13.0
+auto-py-to-exe>=2.40.0

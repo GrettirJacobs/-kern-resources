@@ -1,0 +1,418 @@
+# Kern Resources - Professional .gitignore
+
+# ============================================================================
+# Python
+# ============================================================================
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ============================================================================
+# AI/ML Specific
+# ============================================================================
+
+# Model files
+*.pkl
+*.joblib
+*.h5
+*.hdf5
+*.pb
+*.onnx
+*.tflite
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# Datasets
+data/
+datasets/
+*.csv
+*.tsv
+*.json
+*.jsonl
+*.parquet
+
+# Embeddings and vectors
+embeddings/
+vectors/
+*.vec
+*.npy
+*.npz
+
+# Checkpoints
+checkpoints/
+*.ckpt
+*.checkpoint
+
+# Logs and outputs
+logs/
+outputs/
+runs/
+wandb/
+mlruns/
+.mlflow/
+
+# ============================================================================
+# CrewAI Specific
+# ============================================================================
+
+# CrewAI cache
+creative_lab/crew_ai/cache/
+creative_lab/crew_ai/outputs/
+creative_lab/crew_ai/data/
+
+# Agent outputs
+agent_outputs/
+*.agent_output
+
+# CrewAI logs
+crewai.log
+crew_*.log
+
+# ============================================================================
+# Memory System
+# ============================================================================
+
+# Memory files
+memory_system/memories/
+memory_system/summaries/
+memory_system/tags/
+memory_system/meta/
+*.memory
+all_memories.json
+recent_memories.json
+
+# Vector database
+qdrant_storage/
+.qdrant/
+
+# ============================================================================
+# GUI and Frontend
+# ============================================================================
+
+# ChainLit
+.chainlit/
+chainlit.db
+
+# Node modules (if any)
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Build outputs
+creative_lab/crew_ai/gui/build/
+creative_lab/crew_ai/gui/dist/
+!creative_lab/crew_ai/gui/dist/CrewAI_GUI.exe
+!creative_lab/crew_ai/gui/dist/install_crewai_gui.bat
+
+# ============================================================================
+# Development and Testing
+# ============================================================================
+
+# Test outputs
+test_outputs/
+test_results/
+*.test_result
+
+# Analysis results
+analysis_results/
+reports/
+
+# Temporary files
+temp/
+tmp/
+*.tmp
+*.temp
+nul
+
+# Backup files
+*.bak
+*.backup
+*_backup_*/
+gui_backup_*/
+kern_resources_backup_*/
+
+# ============================================================================
+# Documentation and Archives
+# ============================================================================
+
+# Session documentation (keep structure, exclude content)
+SESSION_DOCUMENTATION_*.md
+NEXT_CHAT_CONTEXT_*.json
+FINDING_INSTRUCTIONS_*.md
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# ============================================================================
+# System and IDE
+# ============================================================================
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# ============================================================================
+# Docker and DevOps
+# ============================================================================
+
+# Docker
+.dockerignore
+docker-compose.override.yml
+
+# GitLab
+gitlab-runner/
+.gitlab-ci-local/
+
+# ============================================================================
+# API Keys and Secrets
+# ============================================================================
+
+# Environment files
+.env
+.env.local
+.env.development
+.env.test
+.env.production
+.env.new
+.env.bak
+.env.fixed
+
+# API key files
+api_keys.json
+secrets.json
+config/secrets/
+
+# ============================================================================
+# Project Specific Exclusions
+# ============================================================================
+
+# Large analysis files
+batch_*_analysis.md
+comprehensive_analysis.md
+combined_analysis.md
+
+# Temporary scripts
+temp_*.py
+test_*.py
+debug_*.py
+quick_*.py
+
+# Performance and monitoring
+*.stackdump
+performance_*.json
+monitoring_*.log
+
+# ============================================================================
+# Keep Important Files (Negation Rules)
+# ============================================================================
+
+# Keep important documentation
+!README.md
+!LICENSE
+!CHANGELOG.md
+!CONTRIBUTING.md
+
+# Keep configuration templates
+!.env.example
+!config.example.json
+
+# Keep essential scripts
+!setup.py
+!requirements.txt
+!docker-compose.yml
+
+# Keep project structure documentation
+!documentation/
+!examples/

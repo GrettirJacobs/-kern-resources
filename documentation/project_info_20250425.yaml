@@ -1,0 +1,246 @@
+project:
+  name: Kern Resources
+  description: A comprehensive resource management and retrieval system with advanced AI capabilities
+  version: 0.1.0
+  last_updated: '2025-04-25'
+
+codebase_summary:
+  purpose: >
+    The Kern Resources codebase is designed to create a comprehensive system for managing, analyzing, and retrieving community resources.
+    It combines traditional data management with advanced AI capabilities to provide intelligent search, analysis, and recommendations.
+    The system is particularly focused on handling Excel-based resource data and making it accessible through an intuitive interface.
+  
+  key_components:
+    - Novel memory system for storing and retrieving information
+    - CrewAI integration for advanced analysis and agent-based processing
+    - Excel data processing and analysis capabilities
+    - Web-based user interface for search and retrieval
+    - API endpoints for programmatic access to the system
+  
+  technologies:
+    - Python
+    - Flask
+    - CrewAI
+    - Pandas
+    - Vector databases (Qdrant)
+    - LLM integration (OpenAI, Anthropic, Google, Llama)
+
+memory_system:
+  description: A novel four-layer memory architecture that combines human-like reconstructive memory with computer-based indexed memory
+  
+  layers:
+    - name: 'Layer 1: Exact Duplicates'
+      description: Stores exact copies of original content (text, code, documents, etc.)
+      implementation_status: Implemented
+      storage_format: Raw text files and JSON
+    
+    - name: 'Layer 2: Machine-Readable Tags'
+      description: Stores structured metadata and tags for efficient retrieval
+      implementation_status: Implemented
+      storage_format: JSON with tag types, values, and scores
+    
+    - name: 'Layer 3: AI Summaries'
+      description: Stores AI-generated summaries, explanations, and commentaries
+      implementation_status: Partially implemented
+      storage_format: JSON with summary text and metadata
+    
+    - name: 'Layer 4: Meta-Commentaries'
+      description: Stores AI-generated insights about patterns and connections across memories
+      implementation_status: Partially implemented
+      storage_format: JSON with meta-analysis text and metadata
+  
+  search_capabilities:
+    - name: Vector Search
+      description: Semantic search using vector embeddings
+      implementation_status: Implemented
+    
+    - name: Tag Search
+      description: Structured search using tags and metadata
+      implementation_status: Implemented
+    
+    - name: Dual Search
+      description: Combined vector and tag search with weighted results
+      implementation_status: Implemented
+  
+  enhancement_capabilities:
+    - name: Periodic Enhancement
+      description: Regular updates to AI analysis and meta-commentaries
+      implementation_status: Partially implemented
+    
+    - name: Dynamic Connections
+      description: Automatic discovery of relationships between memories
+      implementation_status: Planned
+
+ai_integration:
+  crewai:
+    description: Integration with CrewAI for agent-based processing and analysis
+    implementation_status: Partially implemented
+    
+    components:
+      - name: Excel Analysis
+        description: CrewAI-powered analysis of Excel data
+        implementation_status: Implemented
+      
+      - name: Memory-Aware Agents
+        description: Agents that can access and use the memory system
+        implementation_status: Partially implemented
+      
+      - name: Multi-Model Teams
+        description: Teams of agents using different LLM models
+        implementation_status: Partially implemented
+    
+    models:
+      - name: Llama 4 Maverick
+        provider: Meta/Groq
+        status: Integrated
+      
+      - name: Claude 3 Opus
+        provider: Anthropic
+        status: Integrated
+      
+      - name: GPT-4o
+        provider: OpenAI
+        status: Integrated
+      
+      - name: Gemini 1.5 Pro
+        provider: Google
+        status: Integrated
+  
+  a2a:
+    description: Integration with Google's Agent-to-Agent (A2A) protocol
+    implementation_status: Planned
+    
+    components:
+      - name: Agent Communication
+        description: Communication between specialized AI agents
+        implementation_status: Planned
+      
+      - name: Task Delegation
+        description: Delegation of tasks between agents
+        implementation_status: Planned
+  
+  tools:
+    - name: Excel Analysis Tool
+      description: Tool for analyzing Excel files
+      implementation_status: Implemented
+    
+    - name: Memory Integration Tool
+      description: Tool for integrating data with the memory system
+      implementation_status: Implemented
+    
+    - name: Web Crawler
+      description: Tool for crawling websites
+      implementation_status: Planned
+    
+    - name: Document Handler
+      description: Tool for processing documents
+      implementation_status: Planned
+
+development_history:
+  major_milestones:
+    - date: '2025-03-15'
+      description: Initial implementation of the memory system architecture
+    
+    - date: '2025-03-25'
+      description: Integration of CrewAI with the first set of models
+    
+    - date: '2025-04-10'
+      description: Implementation of Excel analysis capabilities
+    
+    - date: '2025-04-15'
+      description: Creation of the Flask-based web interface
+    
+    - date: '2025-04-25'
+      description: Integration of Excel data with the memory system and beginning of memory retrieval interface
+  
+  current_focus: Implementing a comprehensive memory retrieval interface with search and visualization capabilities
+
+remaining_development:
+  high_priority:
+    - name: Memory Retrieval Interface
+      description: Complete the implementation of the search and retrieval interface
+      status: In progress
+    
+    - name: Visualization Components
+      description: Implement visualizations for memory connections and patterns
+      status: Planned
+    
+    - name: Conversational Interface
+      description: Implement a chat-like interface for natural language queries
+      status: Planned
+  
+  medium_priority:
+    - name: A2A Integration
+      description: Integrate Google's Agent-to-Agent protocol
+      status: Planned
+    
+    - name: Advanced Tools
+      description: Implement additional tools for CrewAI agents
+      status: Planned
+    
+    - name: Scheduled Enhancement
+      description: Implement scheduled tasks for enhancing memories
+      status: Planned
+  
+  low_priority:
+    - name: User Authentication
+      description: Implement user authentication and authorization
+      status: Planned
+    
+    - name: Mobile Interface
+      description: Optimize the interface for mobile devices
+      status: Planned
+
+known_challenges:
+  - name: Memory System Scalability
+    description: Ensuring the memory system can scale to handle thousands of resources efficiently
+    potential_solutions:
+      - Optimize vector search algorithms
+      - Implement caching mechanisms
+      - Use database sharding for larger deployments
+  
+  - name: LLM Integration Reliability
+    description: Handling API rate limits, costs, and reliability issues with LLM providers
+    potential_solutions:
+      - Implement robust error handling and retries
+      - Add fallback mechanisms between different providers
+      - Implement local caching of common queries
+  
+  - name: User Interface Complexity
+    description: Balancing the complexity of the memory system with a user-friendly interface
+    potential_solutions:
+      - Implement progressive disclosure of advanced features
+      - Provide multiple views (simple, advanced) for different user needs
+      - Use AI to guide users through complex operations
+  
+  - name: Docker Deployment
+    description: Ensuring consistent deployment across different environments
+    potential_solutions:
+      - Create comprehensive Docker Compose setup
+      - Document environment variables and configuration options
+      - Implement health checks and monitoring
+
+current_development:
+  task: Memory Retrieval Interface Implementation
+  status: In progress
+  
+  components_completed:
+    - Memory search module with vector, tag, and dual search capabilities
+    - API endpoints for search, retrieval, and tag management
+    - Design principles for the interface
+  
+  components_in_progress:
+    - Search page with prominent search bar
+    - Results display with basic information
+    - Detailed view for individual memory items
+  
+  next_steps:
+    - Complete the search page implementation
+    - Add filtering and sorting options
+    - Implement the layered information display
+    - Create a simple visual representation of connections
+  
+  challenges:
+    - Ensuring efficient search across large datasets
+    - Providing meaningful visualizations of memory connections
+    - Maintaining context across interactions
